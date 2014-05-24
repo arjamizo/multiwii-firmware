@@ -12,7 +12,7 @@
 #include "RX.h"
 
 /************************************** MultiWii Serial Protocol *******************************************************/
-// Multiwii Serial Protocol 0 
+// Multiwii Serial Protocol 0
 #define MSP_VERSION              0
 
 //to multiwii developpers/committers : do not add new MSP messages without a proper argumentation/agreement on the forum
@@ -35,7 +35,7 @@
 #define MSP_PID                  112   //out message         P I D coeff (9 are used currently)
 #define MSP_BOX                  113   //out message         BOX setup (number is dependant of your setup)
 #define MSP_MISC                 114   //out message         powermeter trig
-#define MSP_MOTOR_PINS           115   //out message         which pins are in use for motors & servos, for GUI 
+#define MSP_MOTOR_PINS           115   //out message         which pins are in use for motors & servos, for GUI
 #define MSP_BOXNAMES             116   //out message         the aux switch names
 #define MSP_PIDNAMES             117   //out message         the PID names
 #define MSP_WP                   118   //out message         get a WP, WP# is in the payload, returns (WP#, lat, lon, alt, flags) WP#0-home, WP#16-poshold
@@ -88,7 +88,7 @@ void evaluateOtherData(uint8_t sr);
 void evaluateCommand();
 #endif
 
-#define BIND_CAPABLE 0;  //Used for Spektrum today; can be used in the future for any RX type that needs a bind and has a MultiWii module. 
+#define BIND_CAPABLE 0;  //Used for Spektrum today; can be used in the future for any RX type that needs a bind and has a MultiWii module.
 #if defined(SPEK_BIND)
   #define BIND_CAPABLE 1;
 #endif
@@ -154,7 +154,7 @@ void serializeNames(PGM_P s) {
 }
 
 void serialCom() {
-  uint8_t c,n;  
+  uint8_t c,n;
   static uint8_t offset[UART_NUMBER];
   static uint8_t dataSize[UART_NUMBER];
   static enum _serial_state {
@@ -173,11 +173,11 @@ void serialCom() {
     #define GPS_COND
     #if defined(GPS_SERIAL)
       #if defined(GPS_PROMINI)
-        #define GPS_COND       
+        #define GPS_COND
       #else
         #undef GPS_COND
         #define GPS_COND  && (GPS_SERIAL != CURRENTPORT)
-      #endif      
+      #endif
     #endif
     #define RX_COND
     #if (defined(SPEKTRUM) || defined(SBUS)) && (UART_NUMBER > 1)
@@ -242,7 +242,7 @@ void s_struct_w(uint8_t *cb,uint8_t siz) {
 
 #ifndef SUPPRESS_ALL_SERIAL_MSP
 void evaluateCommand() {
-  uint32_t tmp=0; 
+  uint32_t tmp=0;
 
   switch(cmdMSP[CURRENTPORT]) {
    case MSP_PRIVATE:
@@ -250,7 +250,7 @@ void evaluateCommand() {
      break;
    case MSP_SET_RAW_RC:
      s_struct_w((uint8_t*)&rcSerial,16);
-     rcSerialCount = 50; // 1s transition 
+     rcSerialCount = 50; // 1s transition
      break;
    #if GPS && !defined(I2C_GPS)
    case MSP_SET_RAW_GPS:
@@ -292,9 +292,9 @@ void evaluateCommand() {
        conf.powerTrigger1 = set_misc.a / PLEVELSCALE;
      #endif
      conf.minthrottle = set_misc.b;
-     #ifdef FAILSAFE 
+     #ifdef FAILSAFE
        conf.failsafe_throttle = set_misc.e;
-     #endif  
+     #endif
      #if MAG
        conf.mag_declination = set_misc.h;
      #endif
@@ -316,9 +316,9 @@ void evaluateCommand() {
      misc.b = conf.minthrottle;
      misc.c = MAXTHROTTLE;
      misc.d = MINCOMMAND;
-     #ifdef FAILSAFE 
+     #ifdef FAILSAFE
        misc.e = conf.failsafe_throttle;
-     #else  
+     #else
        misc.e = 0;
      #endif
      #ifdef LOG_PERMANENT
@@ -405,7 +405,7 @@ void evaluateCommand() {
        if(rcOptions[BOXCAMTRIG]) tmp |= 1<<BOXCAMTRIG;
      #endif
      #if GPS
-       if(f.GPS_HOME_MODE) tmp |= 1<<BOXGPSHOME; 
+       if(f.GPS_HOME_MODE) tmp |= 1<<BOXGPSHOME;
        if(f.GPS_HOLD_MODE) tmp |= 1<<BOXGPSHOLD;
      #endif
      #if defined(FIXEDWING) || defined(HELICOPTER)
@@ -441,7 +441,7 @@ void evaluateCommand() {
    case MSP_RAW_IMU:
      #if defined(DYNBALANCE)
        for(uint8_t axis=0;axis<3;axis++) {imu.gyroData[axis]=imu.gyroADC[axis];imu.accSmooth[axis]= imu.accADC[axis];} // Send the unfiltered Gyro & Acc values to gui.
-     #endif 
+     #endif
      s_struct((uint8_t*)&imu,18);
      break;
    case MSP_SERVO:
@@ -527,11 +527,11 @@ void evaluateCommand() {
    case MSP_MOTOR_PINS:
      s_struct((uint8_t*)&PWM_PIN,8);
      break;
-   #if defined(USE_MSP_WP)    
+   #if defined(USE_MSP_WP)
    case MSP_WP:
      {
        int32_t lat = 0,lon = 0;
-       uint8_t wp_no = read8();        //get the wp number  
+       uint8_t wp_no = read8();        //get the wp number
        headSerialReply(18);
        if (wp_no == 0) {
          lat = GPS_home[LAT];
@@ -545,7 +545,7 @@ void evaluateCommand() {
        serialize32(lon);
        serialize32(AltHold);           //altitude (cm) will come here -- temporary implementation to test feature with apps
        serialize16(0);                 //heading  will come here (deg)
-       serialize16(0);                 //time to stay (ms) will come here 
+       serialize16(0);                 //time to stay (ms) will come here
        serialize8(0);                  //nav flag will come here
      }
      break;
@@ -590,7 +590,7 @@ void evaluateCommand() {
      break;
    #if defined(SPEK_BIND)
    case MSP_BIND:
-     spekBind();  
+     spekBind();
      headSerialReply(0);
      break;
    #endif
