@@ -1,7 +1,7 @@
 #include <avr/eeprom.h>
 #include "Arduino.h"
 #include "config.h"
-#include "def.h"
+//#include "def.h"
 #include "types.h"
 #include "EEPROM.h"
 #include "MultiWii.h"

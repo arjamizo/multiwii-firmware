@@ -1,4 +1,7 @@
 #include "Arduino.h"
+#define _USE_MATH_DEFINES
+#include <cmath>
+using namespace std;
 #include "config.h"
 #include "def.h"
 #include "types.h"
@@ -160,6 +163,7 @@ float InvSqrt (float x){
   return 0.5f * (conv.f * (3.0f - x * conv.f * conv.f));
 }
 
+#ifndef MOCK
 // signed16 * signed16
 // 22 cycles
 // http://mekonik.wordpress.com/2009/03/18/arduino-avr-gcc-multiplication/
@@ -189,6 +193,13 @@ asm volatile ( \
 : \
 "r26" \
 )
+#else
+void MultiS16X16to32(int32_t &r, int16_t &a, int16_t &b) {
+long aa=a;
+aa*=b;
+r=aa;
+}
+#endif // MOCK
 
 int32_t  __attribute__ ((noinline)) mul(int16_t a, int16_t b) {
   int32_t r;

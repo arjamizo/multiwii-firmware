@@ -7,9 +7,9 @@ November  2013     V2.3
  the Free Software Foundation, either version 3 of the License, or
  any later version. see <http://www.gnu.org/licenses/>
 */
-
+#ifndef MOCK
 #include <avr/io.h>
-
+#endif
 #include "Arduino.h"
 #include "config.h"
 #include "def.h"
@@ -25,9 +25,13 @@ November  2013     V2.3
 #include "Serial.h"
 #include "GPS.h"
 #include "Protocol.h"
-
+#ifndef MOCK
 #include <avr/pgmspace.h>
-
+#endif
+#ifdef MOCK
+#include <cmath>
+using namespace std;
+#endif // MOCK
 /*********** RC alias *****************/
 
 const char pidnames[] PROGMEM =

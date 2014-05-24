@@ -1,3 +1,4 @@
+#define PI M_PI
 #ifndef SENSORS_H_
 #define SENSORS_H_
 
